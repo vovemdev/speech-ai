@@ -1,6 +1,10 @@
 {
     "speech":{
         "title":"Speech to Text",
-        "textPlaceholder":"Press to microphone button and start to speech."
+        "textPlaceHolder":"Press to microphone button and start to speech.",
+        "microPhoneOn":"Microphone On",
+        "microPhoneOff":"Microphone Off",
+        "resetContentPage":"Paragraph was reseted"
+    
     }
 }

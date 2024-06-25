@@ -23,17 +23,17 @@ export default function App() {
 
 	const microphoneOn = () => {
 		SpeechRecognition.startListening({ continuous: true, language: 'en-US' });
-		toast.success('Microphone On', { autoClose: 1500 });
+		toast.success(`${t('speech.microPhoneOn')}`, { autoClose: 1500 });
 	};
 
 	const microphoneOff = () => {
 		SpeechRecognition.stopListening();
-		toast.error('Microphone Off', { autoClose: 1500 });
+		toast.error(`${t('speech.microPhoneOff')}`, { autoClose: 1500 });
 	};
 
 	const resetParagraph = () => {
 		resetTranscript();
-		toast.info('Paragraph was reseted', { autoClose: 1500 });
+		toast.info(`${t('speech.resetContentPage')}`, { autoClose: 1500 });
 	};
 
 	const Microphone = () => {
@@ -66,12 +66,11 @@ export default function App() {
 			</div>
 			<Card.Container>
 				<Card.Top>
-					{/* <Title>Speech To Text</Title> */}
 					<Title>{t('speech.title')}</Title>
 				</Card.Top>
 				<Card.Content>
 					<Paragraph>
-						{transcript ? transcript : `${t('speech.textPlaceholder')}`}
+						{transcript ? transcript : `${t('speech.textPlaceHolder')}`}
 					</Paragraph>
 				</Card.Content>
 				<Card.Bottom>

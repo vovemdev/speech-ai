@@ -1,31 +1,135 @@
+import React from 'react';
+import styled from 'styled-components';
 import SpeechRecognition, {
 	useSpeechRecognition,
 } from 'react-speech-recognition';
-import './App.css';
+import Card from './components/Card';
+import Button from './components/Button';
+import { PuffLoader } from 'react-spinners';
+import { ColorPicker } from './theme';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
-function App() {
-	const {
-		transcript,
-		listening,
-		resetTranscript,
-		browserSupportsSpeechRecognition,
-	} = useSpeechRecognition();
+const lngs = {
+	en: { nativeName: 'English' },
+	it: { nativeName: 'Italiano' },
+};
 
-	if (!browserSupportsSpeechRecognition) {
-		return <span>Browser doesn't support speech recognition.</span>;
-	}
+export default function App() {
+	// muilti lang
+	const { t, i18n } = useTranslation();
+
+	const { transcript, resetTranscript, listening } = useSpeechRecognition();
+
+	const microphoneOn = () => {
+		SpeechRecognition.startListening({ continuous: true, language: 'en-US' });
+		toast.success('Microphone On', { autoClose: 1500 });
+	};
+
+	const microphoneOff = () => {
+		SpeechRecognition.stopListening();
+		toast.error('Microphone Off', { autoClose: 1500 });
+	};
+
+	const resetParagraph = () => {
+		resetTranscript();
+		toast.info('Paragraph was reseted', { autoClose: 1500 });
+	};
+
+	const Microphone = () => {
+		return (
+			<Button
+				color={!listening ? 'success' : 'danger'}
+				onClick={!listening ? microphoneOn : microphoneOff}
+			>
+				<box-icon
+					name={!listening ? 'microphone' : 'microphone-off'}
+					color="white"
+				/>
+			</Button>
+		);
+	};
 
 	return (
-		<div className="App">
+		<Container>
 			<div>
-				<p>Microphone: {listening ? 'on' : 'off'}</p>
-				<button onClick={SpeechRecognition.startListening}>Start</button>
-				<button onClick={SpeechRecognition.stopListening}>Stop</button>
-				<button onClick={resetTranscript}>Reset</button>
-				<p>{transcript}</p>
+				{Object.keys(lngs).map(lng => (
+					<button
+						type="submit"
+						key={lng}
+						onClick={() => i18n.changeLanguage(lng)}
+						disabled={i18n.resolvedLanguage === lng}
+					>
+						{lngs[lng].nativeName}
+					</button>
+				))}
 			</div>
-		</div>
+			<Card.Container>
+				<Card.Top>
+					{/* <Title>Speech To Text</Title> */}
+					<Title>{t('speech.title')}</Title>
+				</Card.Top>
+				<Card.Content>
+					<Paragraph>
+						{transcript ? transcript : `${t('speech.textPlaceholder')}`}
+					</Paragraph>
+				</Card.Content>
+				<Card.Bottom>
+					<BottomContainer>
+						<LoadingBox>
+							<PuffLoader
+								size={50}
+								loading={listening}
+								color={`rgb(${ColorPicker('primary')})`}
+							/>
+						</LoadingBox>
+
+						<ButtonBox>
+							<Microphone />
+							<Button color="primary" onClick={resetParagraph}>
+								<box-icon name="reset" color="white" />
+							</Button>
+						</ButtonBox>
+					</BottomContainer>
+				</Card.Bottom>
+			</Card.Container>
+		</Container>
 	);
 }
 
-export default App;
+const Container = styled.div`
+	position: relative;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;
+
+const Title = styled.h2`
+	padding: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;
+
+const Paragraph = styled.p`
+	padding: 0.5rem;
+`;
+
+const ButtonBox = styled.div`
+	display: flex;
+	column-gap: 0.5rem;
+	padding: 0.5em;
+`;
+
+const BottomContainer = styled.div`
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	justify-content: space-between;
+`;
+
+const LoadingBox = styled.div``;

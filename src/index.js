@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import ThemeContext from './theme';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './index.css';
+import './i18n/i18n';
+import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+	<React.StrictMode>
+		<Suspense fallback="loading">
+			<ThemeContext>
+				<ToastContainer />
+				<App />
+			</ThemeContext>
+		</Suspense>
+	</React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
